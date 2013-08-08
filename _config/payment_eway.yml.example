@@ -1,0 +1,31 @@
+
+EwayPayment:
+
+  # Eway Information
+  privacy_link : 'http://www.eway.com.au/Company/About/Privacy.aspx'
+  logo : 'payment/images/payments/eway.gif'
+
+  # Company Information
+  page_title : 'payment for ...'
+  company_name : 'Name goes here'
+  company_logo : '/themes/mythemes/images/logo.png'
+
+  # URLs
+  url : 'https://au.ewaygateway.com/Request'
+  confirmation_url : 'https://au.ewaygateway.com/Result'
+
+  # Account Information
+  customer_id: ''
+  customer_username: ''
+
+  # Test Mode
+  test_customer_id : '87654321'
+  test_customer_username : 'TestAccount'
+
+  #  Credit Cards
+  credit_cards:
+    - Visa : 'payment/images/payments/methods/visa.jpg'
+    - MasterCard : 'payment/images/payments/methods/mastercard.jpg'
+    - American Express : 'payment/images/payments/methods/american-express.gif'
+    - Dinners Club : 'payment/images/payments/methods/dinners-club.jpg'
+    - JCB : 'payment/images/payments/methods/jcb.jpg'

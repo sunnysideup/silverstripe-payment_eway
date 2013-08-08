@@ -1,0 +1,3 @@
+Director:
+  rules:
+    'ewaypayment_handler//$Action/$ID/$OtherID' : 'EwayPayment_Handler'

@@ -1,0 +1,7 @@
+---
+Only:
+  environment: 'live'
+---
+EwayPayment:
+  test_mode : false;
+---
