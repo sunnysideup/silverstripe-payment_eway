@@ -4,77 +4,64 @@
  * @see http://www.eway.com.au/developers/api/shared-payments
  * @see http://www.eway.com.au/docs/api-documentation/sharedpaymentpagedoc.pdf
  */
-class EwayPayment extends Payment {
+class EwayPayment extends EcommercePayment {
 
-	static $db = array(
+	private static $db = array(
 		'AuthorisationCode' => 'Text'
 	);
 
 	// Eway Information
 
-	protected static $privacy_link = 'http://www.eway.com.au/Company/About/Privacy.aspx';
+	private static $privacy_link = 'http://www.eway.com.au/Company/About/Privacy.aspx';
 
-	protected static $logo = 'payment_eway/images/payments/eway.gif';
+	private static $logo = 'payment/images/payments/eway.gif';
 
 	// Company Information
 
-	protected static $page_title = 'http://www.eway.com.au/Company/About/Privacy.aspx';
+	private static $page_title = 'http://www.eway.com.au/Company/About/Privacy.aspx';
 
-	protected static $company_name = 'payment_eway/images/payments/eway.gif';
+	private static $company_name = 'payment_eway/images/payments/eway.gif';
 
-	protected static $company_logo = 'themes/mythemes/images/logo.png';
+	private static $company_logo = 'themes/mythemes/images/logo.png';
 
 	// URLs
 
-	protected static $url = 'https://au.ewaygateway.com/Request';
-
-	protected static $confirmation_url = 'https://au.ewaygateway.com/Result';
+	private static $url = 'https://au.ewaygateway.com/Request';
+	private static $confirmation_url = 'https://au.ewaygateway.com/Result';
 
 	// Test Mode
 
-	protected static $test_customer_id = '87654321';
+	private static $test_customer_id = '87654321';
+	private static $test_customer_username = 'TestAccount';
 
-	protected static $test_customer_username = 'TestAccount';
+	private static $test_mode = false;
 
-	protected static $test_mode = false;
+	// Account Information
 
-	static function set_test_mode() {self::$test_mode = true;}
+	private static $customer_id;
 
-	// Payment Informations
-
-	protected static $customer_id;
-
-	protected static $customer_username;
-
-	static function set_customer_details($id, $userName) {
-		self::$customer_id = $id;
-		self::$customer_username = $userName;
-	}
+	private static $customer_username;
 
 	// Credit Cards
 
-	protected static $credit_cards = array(
-		'Visa' => 'payment/images/payments/methods/visa.jpg',
-		'MasterCard' => 'payment/images/payments/methods/mastercard.jpg',
-		'American Express' => 'payment/images/payments/methods/american-express.gif',
-		'Dinners Club' => 'payment/images/payments/methods/dinners-club.jpg',
-		'JCB' => 'payment/images/payments/methods/jcb.jpg'
+	private static $credit_cards = array(
+		//'Visa' => 'payment/images/payments/methods/visa.jpg',
+		//'MasterCard' => 'payment/images/payments/methods/mastercard.jpg',
+		//'American Express' => 'payment/images/payments/methods/american-express.gif',
+		//'Dinners Club' => 'payment/images/payments/methods/dinners-club.jpg',
+		//'JCB' => 'payment/images/payments/methods/jcb.jpg'
 	);
 
-	static function remove_credit_card($creditCard) {unset(self::$credit_cards[$creditCard]);}
-
-	// PayPal Pages Style Optional Informations
-
 	function getPaymentFormFields() {
-		$logo = '<img src="' . self::$logo . '" alt="Credit card payments powered by eWAY"/>';
-		$privacyLink = '<a href="' . self::$privacy_link . '" target="_blank" title="Read eWAY\'s privacy policy">' . $logo . '</a><br/>';
+		$logo = '<img src="' . $this->config()->get('logo') . '" alt="Credit card payments powered by eWAY"/>';
+		$privacyLink = '<a href="' . $this->config()->get('privacy_link') . '" target="_blank" title="Read eWAY\'s privacy policy">' . $logo . '</a><br/>';
 		$paymentsList = '';
-		if(self::$credit_cards) {
-			foreach(self::$credit_cards as $name => $image) {
+		if($this->config()->get('credit_cards')) {
+			foreach($this->config()->get('credit_cards') as $name => $image) {
 				$paymentsList .= '<img src="' . $image . '" alt="' . $name . '"/>';
 			}
 		}
-		$fields = new FieldSet(
+		$fields = new FieldList(
 			new LiteralField('EwayInfo', $privacyLink),
 			new LiteralField('EwayPaymentsList', $paymentsList)
 		);
@@ -90,10 +77,6 @@ class EwayPayment extends Payment {
 		$url = $this->EwayURL();
 
 		$response = file_get_contents($url);
-		if(!Director::isLive()) {
-			Debug::log($url);
-			Debug::log($response);
-		}
 		if($response) {
 			$response = Convert::xml2array($response);
 			if(isset($response['Result']) && $response['Result'] == 'True' && isset($response['URI']) && $response['URI']) {
@@ -103,7 +86,7 @@ class EwayPayment extends Payment {
 				$page = new Page();
 
 				$page->Title = 'Redirection to eWAY...';
-				$page->Logo = '<img src="' . self::$logo . '" alt="Payments powered by eWAY"/>';
+				$page->Logo = '<img src="' . $this->config()->get('logo') . '" alt="Payments powered by eWAY"/>';
 				$page->Form = $this->EwayForm($response['URI']);
 
 				$controller = new Page_Controller($page);
@@ -134,24 +117,24 @@ class EwayPayment extends Payment {
 
 		// 2) Main Settings
 
-		if(self::$test_mode) {
-			$inputs['CustomerID'] = self::$test_customer_id;
-			$inputs['UserName'] = self::$test_customer_username;
+		if($this->config()->get('test_mode')) {
+			$inputs['CustomerID'] = $this->config()->get('test_customer_id');
+			$inputs['UserName'] = $this->config()->get('test_customer_username');
 		}
 		else {
-			$inputs['CustomerID'] = self::$customer_id;
-			$inputs['UserName'] = self::$customer_username;
+			$inputs['CustomerID'] = $this->config()->get('customer_id');
+			$inputs['UserName'] = $this->config()->get('customer_username');
 		}
-		$inputs['Amount'] = number_format($this->Amount->getAmount(), 2, '.' , ''); //$decimals = 2, $decPoint = '.' , $thousands_sep = ''
+		$inputs['Amount'] = number_format($this->Amount->getAmount(), 2);
 		$inputs['Currency'] = $this->Amount->getCurrency();
 		$inputs['ReturnURL'] = $inputs['CancelURL'] = Director::absoluteBaseURL() . EwayPayment_Handler::complete_link($this);
 
-		$inputs['CompanyName'] = self::$company_name;
+		$inputs['CompanyName'] = $this->config()->get('company_name');
 		$inputs['MerchantReference'] = $inputs['MerchantInvoice'] = $order->ID;
 		//$inputs['InvoiceDescription'] =
-		$inputs['PageTitle'] = self::$page_title;
+		$inputs['PageTitle'] = $this->config()->get('page_title');
 		$inputs['PageDescription'] = 'Please fill the details below to complete your order.';
-		$inputs['CompanyLogo'] = Director::absoluteBaseURL() . self::$company_logo;
+		$inputs['CompanyLogo'] = Director::absoluteBaseURL() . $this->config()->get('company_logo');
 
 		// 7) Prepopulating Customer Informations
 
@@ -167,7 +150,7 @@ class EwayPayment extends Payment {
 		$inputs['CustomerEmail'] = $address->Email;
 		$inputs['CustomerState'] = $address->RegionCode;
 
-		return self::$url . '?' . http_build_query($inputs);
+		return $this->config()->get('url') . '?' . http_build_query($inputs);
 	}
 
 	function EwayForm($url) {
@@ -187,15 +170,15 @@ HTML;
 
 	function EwayConfirmationURL($code) {
 		$inputs = array('AccessPaymentCode' => $code);
-		if(self::$test_mode) {
-			$inputs['CustomerID'] = self::$test_customer_id;
-			$inputs['UserName'] = self::$test_customer_username;
+		if($this->config()->get('test_mode')) {
+			$inputs['CustomerID'] = $this->config()->get('test_customer_id');
+			$inputs['UserName'] = $this->config()->get('test_customer_username');
 		}
 		else {
-			$inputs['CustomerID'] = self::$customer_id;
-			$inputs['UserName'] = self::$customer_username;
+			$inputs['CustomerID'] = $this->config()->get('customer_id');
+			$inputs['UserName'] = $this->config()->get('customer_username');
 		}
-		return self::$confirmation_url . '?' . http_build_query($inputs);
+		return $this->config()->get('confirmation_url') . '?' . http_build_query($inputs);
 	}
 
 	function populateDefaults() {
@@ -209,10 +192,14 @@ HTML;
  */
 class EwayPayment_Handler extends Controller {
 
-	static $URLSegment = 'eway';
+	private static $allowed_actions = array(
+		"complete"
+	);
+
+	private static $url_segment = 'ewaypayment_handler';
 
 	static function complete_link(EwayPayment $payment) {
-		return self::$URLSegment . "/complete?code={$payment->ID}-{$payment->AuthorisationCode}";
+		return $this->config()->get('url_segment') . "/complete?code={$payment->ID}-{$payment->AuthorisationCode}";
 	}
 
 	/**
@@ -222,7 +209,7 @@ class EwayPayment_Handler extends Controller {
 		if(isset($_REQUEST['code']) && $code = $_REQUEST['code']) {
 			$params = explode('-', $code);
 			if(count($params) == 2) {
-				$payment = DataObject::get_by_id('EwayPayment', $params[0]);
+				$payment = EwayPayment::get()->byID(intval($params[0]));
 				if($payment && $payment->AuthorisationCode == $params[1]) {
 					if(isset($_REQUEST['AccessPaymentCode'])) {
 						$url = $payment->EwayConfirmationURL($_REQUEST['AccessPaymentCode']);
