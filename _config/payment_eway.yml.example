@@ -31,6 +31,7 @@ EwayPayment:
     - American Express : 'payment/images/payments/methods/american-express.gif'
     - Dinners Club : 'payment/images/payments/methods/dinners-club.jpg'
     - JCB : 'payment/images/payments/methods/jcb.jpg'
+
 ###################################################
 # END PAYMENT EWAY
 ###################################################
