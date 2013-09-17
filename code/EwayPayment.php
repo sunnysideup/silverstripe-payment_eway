@@ -3,6 +3,13 @@
 /**
  * @see http://www.eway.com.au/developers/api/shared-payments
  * @see http://www.eway.com.au/docs/api-documentation/sharedpaymentpagedoc.pdf
+ * http://www.eway.com.au/developers/resources/response-codes
+ *
+ *
+ * test CC:
+ * 4444333322221111
+ * any expiry, name, etc...
+ *
  */
 class EwayPayment extends EcommercePayment {
 
@@ -54,7 +61,8 @@ class EwayPayment extends EcommercePayment {
 
 
 	protected $testCodes = array(
-"00" => "Transaction Approved	approved",
+"0" => " --- SELECT RESPONSE TYPE ---",
+"00" => "Transaction Approved approved",
 "01" => "Refer to Issuer",
 "02" => "Refer to Issuer, special",
 "03" => "No Merchant",
@@ -62,15 +70,15 @@ class EwayPayment extends EcommercePayment {
 "05" => "Do Not Honour",
 "06" => "Error",
 "07" => "Pick Up Card, Special",
-"08" => "Honour With Identification	approved",
+"08" => "Honour With Identification approved",
 "09" => "Request In Progress",
-"10" => "Approved For Partial Amount	approved",
-"11" => "Approved, VIP	approved",
+"10" => "Approved For Partial Amount approved",
+"11" => "Approved, VIP approved",
 "12" => "Invalid Transaction",
 "13" => "Invalid Amount",
 "14" => "Invalid Card Number",
 "15" => "No Issuer",
-"16" => "Approved, Update Track 3	approved",
+"16" => "Approved, Update Track 3 approved",
 "19" => "Re-enter Last Transaction",
 "21" => "No Action Taken",
 "22" => "Suspected Malfunction",
@@ -114,8 +122,7 @@ class EwayPayment extends EcommercePayment {
 "93" => "Cannot Complete, Violation Of The Law",
 "94" => "Duplicate Transaction",
 "96" => "System Error"
-	);
-
+ );
 
 	function getPaymentFormFields() {
 		$logo = '<img src="' . $this->config()->get('logo') . '" alt="Credit card payments powered by eWAY"/>';
@@ -194,7 +201,7 @@ class EwayPayment extends EcommercePayment {
 			$inputs['UserName'] = $this->config()->get('customer_username');
 		}
 		if(Director::isDev() && isset($_REQUEST["PaymentTypeTest"])) {
-			$amount = round($this->Amount->getAmount())+intval($_REQUEST["PaymentTypeTest"]);
+			$amount = round($this->Amount->getAmount())+(intval($_REQUEST["PaymentTypeTest"])/100);
 		}
 		else {
 			$amount = $this->Amount->getAmount();
