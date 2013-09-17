@@ -52,6 +52,71 @@ class EwayPayment extends EcommercePayment {
 		//'JCB' => 'payment/images/payments/methods/jcb.jpg'
 	);
 
+
+	protected $testCodes = array(
+"00" => "Transaction Approved	approved",
+"01" => "Refer to Issuer",
+"02" => "Refer to Issuer, special",
+"03" => "No Merchant",
+"04" => "Pick Up Card",
+"05" => "Do Not Honour",
+"06" => "Error",
+"07" => "Pick Up Card, Special",
+"08" => "Honour With Identification	approved",
+"09" => "Request In Progress",
+"10" => "Approved For Partial Amount	approved",
+"11" => "Approved, VIP	approved",
+"12" => "Invalid Transaction",
+"13" => "Invalid Amount",
+"14" => "Invalid Card Number",
+"15" => "No Issuer",
+"16" => "Approved, Update Track 3	approved",
+"19" => "Re-enter Last Transaction",
+"21" => "No Action Taken",
+"22" => "Suspected Malfunction",
+"23" => "Unacceptable Transaction Fee",
+"25" => "Unable to Locate Record On File",
+"30" => "Format Error",
+"31" => "Bank Not Supported By Switch",
+"33" => "Expired Card, Capture",
+"34" => "Suspected Fraud, Retain Card",
+"35" => "Card Acceptor, Contact Acquirer, Retain Card",
+"36" => "Restricted Card, Retain Card",
+"37" => "Contact Acquirer Security Department, Retain Card",
+"38" => "PIN Tries Exceeded, Capture",
+"39" => "No Credit Account",
+"40" => "Function Not Supported",
+"41" => "Lost Card",
+"42" => "No Universal Account",
+"43" => "Stolen Card",
+"44" => "No Investment Account",
+"51" => "Insufficient Funds",
+"52" => "No Cheque Account",
+"53" => "No Savings Account",
+"54" => "Expired Card",
+"55" => "Incorrect PIN",
+"56" => "No Card Record",
+"57" => "Function Not Permitted to Cardholder",
+"58" => "Function Not Permitted to Terminal",
+"59" => "Suspected Fraud",
+"60" => "Acceptor Contact Acquirer",
+"61" => "Exceeds Withdrawal Limit",
+"62" => "Restricted Card",
+"63" => "Security Violation",
+"64" => "Original Amount Incorrect",
+"66" => "Acceptor Contact Acquirer, Security",
+"67" => "Capture Card",
+"75" => "PIN Tries Exceeded",
+"82" => "CVV Validation Error",
+"90" => "Cutoff In Progress",
+"91" => "Card Issuer Unavailable",
+"92" => "Unable To Route Transaction",
+"93" => "Cannot Complete, Violation Of The Law",
+"94" => "Duplicate Transaction",
+"96" => "System Error"
+	);
+
+
 	function getPaymentFormFields() {
 		$logo = '<img src="' . $this->config()->get('logo') . '" alt="Credit card payments powered by eWAY"/>';
 		$privacyLink = '<a href="' . $this->config()->get('privacy_link') . '" target="_blank" title="Read eWAY\'s privacy policy">' . $logo . '</a><br/>';
@@ -65,6 +130,9 @@ class EwayPayment extends EcommercePayment {
 			new LiteralField('EwayInfo', $privacyLink),
 			new LiteralField('EwayPaymentsList', $paymentsList)
 		);
+		if(Director::isDev()) {
+			$fields->push(new DropdownField("PaymentTypeTest", "Required outcome", $this->testCodes));
+		}
 		return $fields;
 	}
 
@@ -125,7 +193,13 @@ class EwayPayment extends EcommercePayment {
 			$inputs['CustomerID'] = $this->config()->get('customer_id');
 			$inputs['UserName'] = $this->config()->get('customer_username');
 		}
-		$inputs['Amount'] = number_format($this->Amount->getAmount(), 2);
+		if(Director::isDev() && isset($_REQUEST["PaymentTypeTest"])) {
+			$amount = round($this->Amount->getAmount())+intval($_REQUEST["PaymentTypeTest"]);
+		}
+		else {
+			$amount = $this->Amount->getAmount();
+		}
+		$inputs['Amount'] = number_format($amount, 2, '.' , ''); //$decimals = 2, $decPoint = '.' , $thousands_sep = ''
 		$inputs['Currency'] = $this->Amount->getCurrency();
 		$inputs['ReturnURL'] = $inputs['CancelURL'] = Director::absoluteBaseURL() . EwayPayment_Handler::complete_link($this);
 
