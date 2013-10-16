@@ -279,7 +279,7 @@ class EwayPayment_Handler extends Controller {
 
 	private static $url_segment = 'ewaypayment_handler';
 
-	static function complete_link(EwayPayment $payment) {
+	public static function complete_link(EwayPayment $payment) {
 		return $this->config()->get('url_segment') . "/complete?code={$payment->ID}-{$payment->AuthorisationCode}";
 	}
 
