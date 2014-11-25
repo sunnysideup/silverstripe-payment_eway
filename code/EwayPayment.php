@@ -242,8 +242,9 @@ class EwayPayment extends EcommercePayment {
 			</form>
 			<script type="text/javascript">
 				jQuery(document).ready(function() {
-					jQuery("input[type='submit']").hide();
-					jQuery('#EwayForm').submit();
+					//add windows.setTimeout here to action 
+					//jQuery("input[type='submit']").hide();
+					//jQuery('#EwayForm').submit();
 				});
 			</script>
 HTML;
