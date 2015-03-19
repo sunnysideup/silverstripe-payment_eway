@@ -226,7 +226,7 @@ class EwayPayment extends EcommercePayment {
 		$inputs['CustomerAddress'] = "$address->Address $address->Address2";
 		$inputs['CustomerPostCode'] = $address->PostalCode;
 		$inputs['CustomerCity'] = $address->City;
-		$inputs['CustomerCountry'] = if(class_exists("Geoip")) {Geoip::countryCode2name($address->Country);}
+		$inputs['CustomerCountry'] = (class_exists("Geoip") ? Geoip::countryCode2name($address->Country) : $address->Country);
 		$inputs['CustomerPhone'] = $address->Phone;
 		$inputs['CustomerEmail'] = $address->Email;
 		$inputs['CustomerState'] = $address->RegionCode;
