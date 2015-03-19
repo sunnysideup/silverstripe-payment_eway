@@ -226,7 +226,7 @@ class EwayPayment extends EcommercePayment {
 		$inputs['CustomerAddress'] = "$address->Address $address->Address2";
 		$inputs['CustomerPostCode'] = $address->PostalCode;
 		$inputs['CustomerCity'] = $address->City;
-		$inputs['CustomerCountry'] = Geoip::countryCode2name($address->Country);
+		$inputs['CustomerCountry'] = if(class_exists("Geoip")) {Geoip::countryCode2name($address->Country);}
 		$inputs['CustomerPhone'] = $address->Phone;
 		$inputs['CustomerEmail'] = $address->Email;
 		$inputs['CustomerState'] = $address->RegionCode;
@@ -242,7 +242,7 @@ class EwayPayment extends EcommercePayment {
 			</form>
 			<script type="text/javascript">
 				jQuery(document).ready(function() {
-					//add windows.setTimeout here to action 
+					//add windows.setTimeout here to action
 					//jQuery("input[type='submit']").hide();
 					//jQuery('#EwayForm').submit();
 				});
