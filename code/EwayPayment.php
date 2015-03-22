@@ -21,7 +21,7 @@ class EwayPayment extends EcommercePayment {
 
 	private static $privacy_link = 'http://www.eway.com.au/Company/About/Privacy.aspx';
 
-	private static $logo = 'payment/images/payments/eway.gif';
+	private static $logo = 'payment_eway/images/eway.png';
 
 	// Company Information
 
