@@ -288,9 +288,10 @@ class EwayPayment_Handler extends Controller {
 	}
 
 	/**
-	 * Manages the 'return' and 'cancel' PayPal replies
+	 * Manages the 'return' and 'cancel' replies
 	 */
 	function complete() {
+		$this->extend("EwayPayment_Handler_completion_start");
 		if(isset($_REQUEST['code']) && $code = $_REQUEST['code']) {
 			$params = explode('-', $code);
 			if(count($params) == 2) {
