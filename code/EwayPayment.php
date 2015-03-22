@@ -39,6 +39,7 @@ class EwayPayment extends EcommercePayment {
 	// Test Mode
 
 	private static $test_customer_id = '87654321';
+
 	private static $test_customer_username = 'TestAccount';
 
 	private static $test_mode = false;
@@ -128,8 +129,8 @@ class EwayPayment extends EcommercePayment {
 		$logo = '<img src="' . $this->config()->get('logo') . '" alt="Credit card payments powered by eWAY"/>';
 		$privacyLink = '<a href="' . $this->config()->get('privacy_link') . '" target="_blank" title="Read eWAY\'s privacy policy">' . $logo . '</a><br/>';
 		$paymentsList = '';
-		if($this->config()->get('credit_cards')) {
-			foreach($this->config()->get('credit_cards') as $name => $image) {
+		if($cards = $this->config()->get('credit_cards')) {
+			foreach($cards as $name => $image) {
 				$paymentsList .= '<img src="' . $image . '" alt="' . $name . '"/>';
 			}
 		}
