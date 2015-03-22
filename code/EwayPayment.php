@@ -27,13 +27,15 @@ class EwayPayment extends EcommercePayment {
 
 	private static $page_title = 'http://www.eway.com.au/Company/About/Privacy.aspx';
 
-	private static $company_name = 'payment_eway/images/payments/eway.gif';
+	private static $company_name = 'e-way';
 
-	private static $company_logo = 'themes/mythemes/images/logo.png';
+	private static $company_logo = 'payment_eway/images/eway.png';
 
 	// URLs
 
 	private static $url = 'https://au.ewaygateway.com/Request';
+
+
 	private static $confirmation_url = 'https://au.ewaygateway.com/Result';
 
 	// Test Mode
