@@ -41,7 +41,7 @@ class EwayPayment extends EcommercePayment {
 	private static $test_customer_id = '87654321';
 	private static $test_customer_username = 'TestAccount';
 
-	private static $test_mode = true;
+	private static $test_mode = false;
 
 	// Account Information
 
