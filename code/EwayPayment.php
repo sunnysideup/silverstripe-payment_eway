@@ -19,17 +19,17 @@ class EwayPayment extends EcommercePayment {
 
 	// Eway Information
 
-	private static $privacy_link = 'http://www.eway.com.au/Company/About/Privacy.aspx';
+	private static $privacy_link = 'https://www.eway.com.au/Company/About/Privacy.aspx';
 
 	private static $logo = 'payment_eway/images/eway.png';
 
 	// Company Information
 
-	private static $page_title = 'http://www.eway.com.au/Company/About/Privacy.aspx';
+	private static $page_title = 'Your Title';
 
-	private static $company_name = 'e-way';
+	private static $company_name = 'Your Company Name';
 
-	private static $company_logo = 'payment_eway/images/eway.png';
+	private static $company_logo = 'Your company Logoz';
 
 	// URLs
 
@@ -292,16 +292,27 @@ class EwayPayment_Handler extends Controller {
 	 */
 	function complete() {
 		if(isset($_REQUEST['code']) && $code = $_REQUEST['code']) {
+			print_r("A");
+			print_r($code);
 			$params = explode('-', $code);
 			if(count($params) == 2) {
 				$payment = EwayPayment::get()->byID(intval($params[0]));
+				print_r("B");
+				print_r($payment);
 				if($payment && $payment->AuthorisationCode == $params[1]) {
+					print_r("C");
 					if(isset($_REQUEST['AccessPaymentCode'])) {
 						$url = $payment->EwayConfirmationURL($_REQUEST['AccessPaymentCode']);
+						print_r("D");
+						print_r($url);
 						$response = file_get_contents($url);
 						if($response) {
+							print_r("E");
+							print_r($url);
 							$response = Convert::xml2array($response);
 							if(isset($response['ResponseCode']) && $response['ResponseCode'] == '00') {
+								print_r("F");
+								print_r($url);
 								$payment->Status = 'Success';
 							}
 							else {
@@ -311,6 +322,7 @@ class EwayPayment_Handler extends Controller {
 						else {
 							$payment->Status = 'Failure';
 						}
+						die("AAA");
 						$payment->write();
 						$payment->redirectToOrder();
 					}
