@@ -245,7 +245,7 @@ class EwayPayment extends EcommercePayment {
 		$inputs['CustomerPhone'] = $address->Phone;
 		$inputs['CustomerEmail'] = $address->Email;
 		$inputs['CustomerState'] = $address->RegionCode;
-		if($this->config()->get('test_mode')) {
+		if($this->config()->get('test_mode') == 'yes') {
 			$inputs['CompanyName'] = "TEST FOR ".$inputs['CompanyName'];
 			debug::log($inputs);
 			debug::log($this->config()->get('url'));
