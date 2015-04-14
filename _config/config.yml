@@ -3,5 +3,5 @@ Only:
   environment: 'live'
 ---
 EwayPayment:
-  test_mode : false;
+  test_mode : 'no';
 

@@ -44,7 +44,12 @@ class EwayPayment extends EcommercePayment {
 
 	private static $test_customer_username = 'TestAccount';
 
-	private static $test_mode = false;
+	/**
+	 * NB: this is a string... anything will divert to LIVE
+	 * unless it is set to "yes"
+	 * @var String
+	 */
+	private static $test_mode = 'no';
 
 	// Account Information
 
@@ -195,7 +200,7 @@ class EwayPayment extends EcommercePayment {
 
 		// 2) Main Settings
 
-		if($this->config()->get('test_mode')) {
+		if($this->config()->get('test_mode') == 'yes') {
 			$inputs['CustomerID'] = $this->config()->get('test_customer_id');
 			$inputs['UserName'] = $this->config()->get('test_customer_username');
 		}
@@ -203,7 +208,7 @@ class EwayPayment extends EcommercePayment {
 			$inputs['CustomerID'] = $this->config()->get('customer_id');
 			$inputs['UserName'] = $this->config()->get('customer_username');
 		}
-		if(Director::isDev() && isset($_REQUEST["PaymentTypeTest"])) {
+		if($this->config()->get('test_mode') == 'yes' && isset($_REQUEST["PaymentTypeTest"])) {
 			$amount = round($this->Amount->getAmount())+(intval($_REQUEST["PaymentTypeTest"])/100);
 		}
 		else {
@@ -233,7 +238,10 @@ class EwayPayment extends EcommercePayment {
 		$inputs['CustomerPhone'] = $address->Phone;
 		$inputs['CustomerEmail'] = $address->Email;
 		$inputs['CustomerState'] = $address->RegionCode;
-
+		$this->config()->get('test_mode') {
+			debug::log($inputs);
+			debug::log($this->config()->get('url'));
+		}
 		return $this->config()->get('url') . '?' . http_build_query($inputs);
 	}
 
@@ -255,7 +263,7 @@ HTML;
 
 	function EwayConfirmationURL($code) {
 		$inputs = array('AccessPaymentCode' => $code);
-		if($this->config()->get('test_mode')) {
+		if($this->config()->get('test_mode') == 'yes') {
 			$inputs['CustomerID'] = $this->config()->get('test_customer_id');
 			$inputs['UserName'] = $this->config()->get('test_customer_username');
 		}
