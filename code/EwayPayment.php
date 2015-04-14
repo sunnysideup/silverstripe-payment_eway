@@ -29,7 +29,12 @@ class EwayPayment extends EcommercePayment {
 
 	private static $company_name = 'Your Company Name';
 
-	private static $company_logo = 'Your company Logoz';
+	/**
+	 * e.g. /themes/mytheme/images/myimage.png
+	 * make sure the location is SSL if you add it
+	 * @var String
+	 */
+	private static $company_logo = 'Your company Logo file location';
 
 	// URLs
 
@@ -223,7 +228,9 @@ class EwayPayment extends EcommercePayment {
 		//$inputs['InvoiceDescription'] =
 		$inputs['PageTitle'] = $this->config()->get('page_title');
 		$inputs['PageDescription'] = 'Please fill the details below to complete your order.';
-		$inputs['CompanyLogo'] = Director::absoluteBaseURL() . $this->config()->get('company_logo');
+		if($logo = $this->config()->get('company_logo')) {
+			$inputs['CompanyLogo'] = Director::absoluteBaseURL() . $logo;
+		}
 
 		// 7) Prepopulating Customer Informations
 
@@ -239,6 +246,7 @@ class EwayPayment extends EcommercePayment {
 		$inputs['CustomerEmail'] = $address->Email;
 		$inputs['CustomerState'] = $address->RegionCode;
 		$this->config()->get('test_mode') {
+			$inputs['CompanyName'] = "TEST FOR ".$inputs['CompanyName'];
 			debug::log($inputs);
 			debug::log($this->config()->get('url'));
 		}
