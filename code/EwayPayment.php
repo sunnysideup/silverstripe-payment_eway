@@ -163,7 +163,6 @@ class EwayPayment extends EcommercePayment {
 		// 1) Get secured Eway url
 
 		$url = $this->EwayURL();
-
 		$response = file_get_contents($url);
 		if($response) {
 			$response = Convert::xml2array($response);
@@ -247,7 +246,7 @@ class EwayPayment extends EcommercePayment {
 		$inputs['CustomerState'] = $address->RegionCode;
 		if($this->config()->get('test_mode') == 'yes') {
 			$inputs['CompanyName'] = "TEST FOR ".$inputs['CompanyName'];
-			debug::log($inputs);
+			debug::log(print_r($inputs, 1));
 			debug::log($this->config()->get('url'));
 		}
 		return $this->config()->get('url') . '?' . http_build_query($inputs);
