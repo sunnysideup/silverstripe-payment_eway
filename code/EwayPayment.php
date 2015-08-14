@@ -21,13 +21,15 @@ class EwayPayment extends EcommercePayment {
 
 	private static $privacy_link = 'https://www.eway.com.au/Company/About/Privacy.aspx';
 
-	private static $logo = 'payment_eway/images/eway.png';
+	private static $logo = '/payment_eway/images/eway.png';
 
 	// Company Information
 
 	private static $page_title = 'Your Title';
 
 	private static $company_name = 'Your Company Name';
+
+	private static $payment_explanation = 'Your payment will be processed by the eWay payment processing site.';
 
 	/**
 	 * e.g. /themes/mytheme/images/myimage.png
@@ -139,13 +141,14 @@ class EwayPayment extends EcommercePayment {
 
 	function getPaymentFormFields() {
 		$logo = '<img src="' . $this->config()->get('logo') . '" alt="Credit card payments powered by eWAY"/>';
-		$privacyLink = '<a href="' . $this->config()->get('privacy_link') . '" target="_blank" title="Read eWAY\'s privacy policy">' . $logo . '</a><br/>';
+		$privacyLink = '<a href="' . $this->config()->get('privacy_link') . '" target="_blank" title="Read eWAY\'s privacy policy">' . $logo . '</a>';
 		$paymentsList = '';
 		if($cards = $this->config()->get('credit_cards')) {
 			foreach($cards as $name => $image) {
 				$paymentsList .= '<img src="' . $image . '" alt="' . $name . '"/>';
 			}
 		}
+		$paymentsList .= "<p>".$this->Config()->get("payment_explanation")."</p>";
 		$fields = new FieldList(
 			new LiteralField('EwayInfo', $privacyLink),
 			new LiteralField('EwayPaymentsList', $paymentsList)
@@ -256,13 +259,18 @@ class EwayPayment extends EcommercePayment {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		return <<<HTML
 			<form id="EwayForm" method="post" action="$url">
-				<input type="submit" value="Submit" />
+				<input type="submit" value="Pay Now" />
+				<p>Continue through to payment page - if this does not happen automatically then please click above.</p>
 			</form>
 			<script type="text/javascript">
 				jQuery(document).ready(function() {
-					//add windows.setTimeout here to action
-					//jQuery("input[type='submit']").hide();
-					//jQuery('#EwayForm').submit();
+					window.setTimeout(
+						function(){
+							jQuery("input[type='submit']").hide();
+							jQuery('#EwayForm').submit();
+						},
+						200
+					);
 				});
 			</script>
 HTML;
