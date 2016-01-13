@@ -183,7 +183,7 @@ class EwayPayment extends EcommercePayment {
 
 				$form = $controller->renderWith('PaymentProcessingPage');
 
-				return new Payment_Processing($form);
+				return EcommercePayment_Processing::create($form);
 			}
 		}
 
