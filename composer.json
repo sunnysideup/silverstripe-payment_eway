@@ -1,22 +1,30 @@
 {
-	"name": "sunnysideup/payment_eway",
-	"type": "silverstripe-module",
-	"description": "pay using the eway payment gateway",
-	"homepage": "http://www.silverstripe-ecommerce.com",
-	"keywords": ["ecommerce", "e-commerce", "shop", "cart", "eway", "e-way", "silverstripe", "eway payment", "e-way payment"],
-	"license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
-	"authors":[
-		{
-			"name": "Nicolaas Francken",
-			"homepage": "https://github.com/sunnysideup",
-			"email" : "modules@sunnysideup.co.nz",
-			"role" : "lead developer"
-		}
-	],
-	"require":{
-		"sunnysideup/ecommerce": "dev-master"
-	},
-	"extra": {
-		"installer-name": "payment_eway"
-	}
+    "name": "sunnysideup/payment_eway",
+    "type": "silverstripe-module",
+    "description": "pay using the eway payment gateway",
+    "keywords": [
+        "ecommerce",
+        "e-commerce",
+        "shop",
+        "cart",
+        "eway",
+        "e-way",
+        "silverstripe",
+        "eway payment",
+        "e-way payment"
+    ],
+    "license": "Sunny Side Up (BSD-3-Clause and CUSTOM)",
+    "authors": [
+        {
+            "name": "Nicolaas Francken",
+            "email": "modules@sunnysideup.co.nz",
+            "role": "lead developer"
+        }
+    ],
+    "require": {
+        "sunnysideup/ecommerce": "dev-master"
+    },
+    "extra": {
+        "installer-name": "payment_eway"
+    }
 }
