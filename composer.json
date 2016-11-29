@@ -3,13 +3,15 @@
     "type": "silverstripe-module",
     "description": "pay using the eway payment gateway",
     "keywords": [
+        "Silverstripe-CMS",
+        "CMS",
+        "Silverstripe",
         "ecommerce",
         "e-commerce",
         "shop",
         "cart",
         "eway",
         "e-way",
-        "silverstripe",
         "eway payment",
         "e-way payment"
     ],
@@ -22,7 +24,9 @@
         }
     ],
     "require": {
-        "sunnysideup/ecommerce": "dev-master"
+        "sunnysideup/ecommerce": "*",
+        "silverstripe/framework": "~3.1",
+        "silverstripe/cms": "~3.1"
     },
     "extra": {
         "installer-name": "payment_eway"
